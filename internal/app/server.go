@@ -21,7 +21,7 @@ func (a *Application) StartServer() {
 	{
 		api.POST("/send", a.handler.SendMessage)
 		api.GET("/recieve")
-		api.POST("/transfer")
+		api.POST("/transfer", a.handler.TransferSegments)
 	}
 
 	err := router.Run()
