@@ -1,0 +1,92 @@
+definitions:
+  model.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  model.Message:
+    properties:
+      sender_name:
+        type: string
+      string_message:
+        type: string
+    type: object
+  model.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Segment:
+    properties:
+      id:
+        type: string
+      payload:
+        items:
+          type: integer
+        type: array
+      segment_number:
+        type: integer
+      sender_name:
+        type: string
+      total_segments:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /http/send:
+    post:
+      consumes:
+      - application/json
+      description: Этот эндпоит отправляет сообщение на сервер
+      parameters:
+      - description: Сообщение для отправки
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/model.Message'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешная отправка
+          schema:
+            $ref: '#/definitions/model.MessageResponse'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: отправка сообщения
+  /http/transfer:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Сегмент
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/model.Segment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно получено и отправлено в кафку
+          schema:
+            $ref: '#/definitions/model.MessageResponse'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: передача сегментов в кафку
+swagger: "2.0"
