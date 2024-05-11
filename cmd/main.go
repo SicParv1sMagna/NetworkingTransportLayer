@@ -56,19 +56,21 @@ func main() {
 						continue
 					}
 
-					var fullMsg string
-
 					// sort msg.segments
 					sort.Slice(msg.segments, func(i, j int) bool {
 						return msg.segments[i].SegmentNumber < msg.segments[j].SegmentNumber
 					})
 
+					var fullMsg bytes.Buffer // Создаем буфер для эффективной конкатенации строк
+
 					for _, segment := range msg.segments {
-						fullMsg += segment.Payload
+						fullMsg.Write(segment.Payload) // Добавляем данные сегмента к буферу
 					}
 
+					result := fullMsg.String()
+
 					payload := model.CollectedMessage{
-						Message:    fullMsg,
+						Message:    result,
 						SenderName: msg.segments[0].SenderName,
 						Time:       msg.segments[0].ID,
 						Error:      len(msg.segments) < int(msg.segments[0].TotalSegments),
@@ -80,7 +82,7 @@ func main() {
 						continue
 					}
 
-					resp, err := http.Post("http://localhost:5001/send-message", "application/json", bytes.NewBuffer(payloadBytes))
+					resp, err := http.Post("http://localhost:5001/api/send-message", "application/json", bytes.NewBuffer(payloadBytes))
 					if err != nil {
 						log.Printf("Error sending post request: %v", err)
 						continue

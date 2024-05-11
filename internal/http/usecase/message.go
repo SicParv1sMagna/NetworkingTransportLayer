@@ -1,12 +1,14 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/SicParv1sMagna/NetworkingTransportLayer/internal/http/constants"
 )
 
 // TODO: Refactor
-func (uc *UseCase) MessageSegmentation(message string) []string {
-	var segments []string
+func (uc *UseCase) MessageSegmentation(message string) [][]byte {
+	var segments [][]byte
 
 	if len(message) == 0 {
 		return segments
@@ -18,9 +20,11 @@ func (uc *UseCase) MessageSegmentation(message string) []string {
 			end = len(message)
 		}
 
-		segment := message[i:end]
+		segment := make([]byte, end-i)
+		copy(segment, []byte(message[i:end]))
 		segments = append(segments, segment)
+		fmt.Println("segment", i, segment)
 	}
-
+	fmt.Println("segments", segments)
 	return segments
 }

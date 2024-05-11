@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/SicParv1sMagna/NetworkingTransportLayer/internal/model"
 	"github.com/gin-gonic/gin"
@@ -32,15 +32,16 @@ func (h *Handler) SendMessage(c *gin.Context) {
 	}
 
 	segmentedMessage := h.UseCase.MessageSegmentation(message.StringMessage)
-	currentTime := time.Now()
 
+	fmt.Println("message", segmentedMessage)
 	for idx, segment := range segmentedMessage {
 		marshalledSegment, err := json.Marshal(model.Segment{
-			ID:            currentTime,
+			ID:            message.Time,
 			TotalSegments: uint(len(segmentedMessage)),
 			SenderName:    message.SenderName,
 			SegmentNumber: uint(idx + 1),
 			Payload:       segment,
+			HadError:      false,
 		})
 
 		if err != nil {
@@ -50,7 +51,7 @@ func (h *Handler) SendMessage(c *gin.Context) {
 
 		log.Println("Number: ", idx+1, "Payload: ", segment, "Message: ", message.StringMessage)
 
-		resp, err := http.Post("http://localhost:8000/code", "application/json", bytes.NewBuffer(marshalledSegment))
+		resp, err := http.Post("http://localhost:8081/api/channel/code", "application/json", bytes.NewBuffer(marshalledSegment))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 			return
