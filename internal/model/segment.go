@@ -7,5 +7,6 @@ type Segment struct {
 	TotalSegments uint      `json:"total_segments"`
 	SenderName    string    `json:"sender_name"`
 	SegmentNumber uint      `json:"segment_number"`
-	Payload       []byte    `json:"payload"`
+	Payload       string    `json:"payload"`
+	HadError      bool      `json:"had_error"`
 }

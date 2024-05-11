@@ -5,8 +5,8 @@ import (
 )
 
 // TODO: Refactor
-func (uc *UseCase) MessageSegmentation(message string) [][]byte {
-	var segments [][]byte
+func (uc *UseCase) MessageSegmentation(message string) []string {
+	var segments []string
 
 	if len(message) == 0 {
 		return segments
@@ -18,8 +18,7 @@ func (uc *UseCase) MessageSegmentation(message string) [][]byte {
 			end = len(message)
 		}
 
-		segment := make([]byte, end-i)
-		copy(segment, []byte(message[i:end]))
+		segment := message[i:end]
 		segments = append(segments, segment)
 	}
 

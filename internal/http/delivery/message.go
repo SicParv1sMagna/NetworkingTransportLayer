@@ -32,10 +32,11 @@ func (h *Handler) SendMessage(c *gin.Context) {
 	}
 
 	segmentedMessage := h.UseCase.MessageSegmentation(message.StringMessage)
+	currentTime := time.Now()
 
 	for idx, segment := range segmentedMessage {
 		marshalledSegment, err := json.Marshal(model.Segment{
-			ID:            time.Now(),
+			ID:            currentTime,
 			TotalSegments: uint(len(segmentedMessage)),
 			SenderName:    message.SenderName,
 			SegmentNumber: uint(idx + 1),
@@ -43,13 +44,13 @@ func (h *Handler) SendMessage(c *gin.Context) {
 		})
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.New("ошибка при кодировании сообщений").Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
 		log.Println("Number: ", idx+1, "Payload: ", segment, "Message: ", message.StringMessage)
 
-		resp, err := http.Post("http://localhost:8081/channel/code", "application/json", bytes.NewBuffer(marshalledSegment))
+		resp, err := http.Post("http://localhost:8000/code", "application/json", bytes.NewBuffer(marshalledSegment))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 			return
