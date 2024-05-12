@@ -61,6 +61,15 @@ func main() {
 						return msg.segments[i].SegmentNumber < msg.segments[j].SegmentNumber
 					})
 
+					// error := false
+
+					// for _, seg := range msg.segments {
+					// 	if seg.HadError {
+					// 		error = true
+					// 		break
+					// 	}
+					// }
+
 					var fullMsg bytes.Buffer // Создаем буфер для эффективной конкатенации строк
 
 					for _, segment := range msg.segments {
@@ -69,11 +78,14 @@ func main() {
 
 					result := fullMsg.String()
 
+					// error := len(msg.segments) < int(msg.segments[0].TotalSegments) || msg.segments[0].HadError
+
 					payload := model.CollectedMessage{
 						Message:    result,
 						SenderName: msg.segments[0].SenderName,
 						Time:       msg.segments[0].ID,
-						Error:      len(msg.segments) < int(msg.segments[0].TotalSegments),
+						// Error:      len(msg.segments) < int(msg.segments[0].TotalSegments) || error,
+						Error: len(msg.segments) < int(msg.segments[0].TotalSegments),
 					}
 
 					payloadBytes, err := json.Marshal(payload)
