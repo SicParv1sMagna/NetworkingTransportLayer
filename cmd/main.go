@@ -25,7 +25,7 @@ func main() {
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
 
-	consumer, err := sarama.NewConsumer([]string{"localhost:29093"}, config)
+	consumer, err := sarama.NewConsumer([]string{"172.20.10.6:29093"}, config)
 	if err != nil {
 		log.Fatalf("Failed to create consumer: %v", err)
 	}
@@ -94,7 +94,7 @@ func main() {
 						continue
 					}
 
-					resp, err := http.Post("http://localhost:5001/api/send-message", "application/json", bytes.NewBuffer(payloadBytes))
+					resp, err := http.Post("http://172.20.10.12:5001/api/send-message", "application/json", bytes.NewBuffer(payloadBytes))
 					if err != nil {
 						log.Printf("Error sending post request: %v", err)
 						continue

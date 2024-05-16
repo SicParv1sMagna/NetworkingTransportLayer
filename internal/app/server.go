@@ -17,11 +17,11 @@ func (a *Application) StartServer() {
 	docs.SwaggerInfo.Title = "Транспортный уровень"
 	docs.SwaggerInfo.Description = ""
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = "172.20.10.1:8080"
 	docs.SwaggerInfo.BasePath = "/"
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{"http://172.20.10.12:5173"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
@@ -35,7 +35,7 @@ func (a *Application) StartServer() {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	err := router.Run()
+	err := router.Run("172.20.10.6:8080")
 	if err != nil {
 		log.Println("Error with running server")
 		return

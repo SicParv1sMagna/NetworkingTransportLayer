@@ -49,9 +49,9 @@ func (h *Handler) SendMessage(c *gin.Context) {
 			return
 		}
 
-		log.Println("Number: ", idx+1, "Payload: ", segment, "Message: ", message.StringMessage)
+		log.Println("sending message: ", bytes.NewBuffer(marshalledSegment))
 
-		resp, err := http.Post("http://localhost:8081/api/channel/code", "application/json", bytes.NewBuffer(marshalledSegment))
+		resp, err := http.Post("http://172.20.10.8:8081/api/channel/code", "application/json", bytes.NewBuffer(marshalledSegment))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 			return

@@ -15,7 +15,7 @@ func NewProducer() (*Producer, error) {
 	config.Producer.Retry.Max = 5
 	config.Producer.Return.Successes = true
 
-	producer, err := sarama.NewSyncProducer([]string{"localhost:29093"}, config)
+	producer, err := sarama.NewSyncProducer([]string{"172.20.10.6:29093"}, config)
 	if err != nil {
 		return nil, err
 	}
